@@ -1,7 +1,7 @@
 import copy
 from utils import Direction, find_guard_position_and_rotation, GameOver, LoopDetected
 
-class Map:
+class Part1:
     def __init__(self, map_data):
         self.map_data = map_data
         self.current_position, self.current_rotation = find_guard_position_and_rotation(self.map_data)
@@ -25,16 +25,19 @@ class Map:
     def is_loop_detected(self, next_x, next_y):
         return (next_x, next_y, self.current_rotation) in self.visited_positions
 
-    def next_step(self, counter = 0):
+    def is_out_of_map(self, next_x, next_y):
+        return next_y >= self._max_y or next_x >= self._max_x or next_y < 0 or next_x < 0
+
+    def next_step(self):
         next_x, next_y = self.next_position()
 
-        if next_y >= self._max_y or next_x >= self._max_x or next_y < 0 or next_x < 0:
+        if self.is_out_of_map(next_x, next_y):
             raise GameOver()
         elif self.is_loop_detected(next_x, next_y):
             raise LoopDetected(next_x, next_y)
         elif self.map_data[next_y][next_x] == '#':
             self.current_rotation = self.current_rotation.next_direction()
-            return self.next_step(counter + 1)
+            return self.next_step()
         else:
             self.visited_positions.add((next_x, next_y, self.current_rotation))
             return next_x, next_y
@@ -74,7 +77,7 @@ class Map:
         except LoopDetected as e:
             raise e
 
-class LoopDetector(Map):
+class Part2(Part1):
 
     def __init__(self, map_data):
         super().__init__(map_data)
@@ -87,7 +90,7 @@ class LoopDetector(Map):
         try:
             new_map = copy.deepcopy(self.default_map_data)
             new_map[self.current_position[1]][self.current_position[0]] = '#'
-            Map(new_map).start_traversing()
+            Part1(new_map).start_traversing()
         except LoopDetected:
             self.detected_loop_positions.add(self.current_position)
 

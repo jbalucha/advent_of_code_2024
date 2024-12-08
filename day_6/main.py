@@ -1,7 +1,7 @@
 import argparse
 import utils
 
-from logic import LoopDetector, Map
+from logic import Part2, Part1
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process a map file.')
@@ -11,8 +11,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.part == 1:
-        map = Map(utils.open_file_as_2d_array(args.file))
+        map = Part1(utils.open_file_as_2d_array(args.file))
     else:
-        map = LoopDetector(utils.open_file_as_2d_array(args.file))
+        map = Part2(utils.open_file_as_2d_array(args.file))
 
     print(map.start_traversing())
