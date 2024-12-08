@@ -16,15 +16,12 @@ class Resolver:
             if index == len(numbers):
                 return current == result
 
-            # Try adding the next number
             if helper(current + numbers[index], index + 1):
                 return True
 
-            # Try multiplying the next number
             if helper(current * numbers[index], index + 1):
                 return True
 
-            # Try concatenating the next number
             if helper(int(str(current) + str(numbers[index])), index + 1):
                 return True
 
